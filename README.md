@@ -1,1 +1,6 @@
 # DB_PROJECT2021
+
+TODO
+  FRONT
+  BACK
+  SQL

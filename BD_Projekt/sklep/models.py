@@ -76,7 +76,7 @@ class AuthUserUserPermissions(models.Model):
 
 class Categories(models.Model):
     cid = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=-1)
+    name = models.CharField(max_length=100)
     parent_cid = models.IntegerField(blank=True, null=True)
 
     class Meta:
@@ -86,18 +86,18 @@ class Categories(models.Model):
 
 class Clients(models.Model):
     client_id = models.IntegerField(primary_key=True)
-    login = models.CharField(max_length=-1)
-    sha_pass = models.CharField(db_column='SHA_pass', max_length=-1)  # Field name made lowercase.
-    name = models.CharField(max_length=-1)
-    surname = models.CharField(max_length=-1)
-    city = models.CharField(max_length=-1)
-    region = models.CharField(max_length=-1, blank=True, null=True)
-    zip_code = models.CharField(max_length=-1)
-    street = models.CharField(max_length=-1)
+    login = models.CharField(max_length=100)
+    sha_pass = models.CharField(db_column='SHA_pass', max_length=100)  # Field name made lowercase.
+    name = models.CharField(max_length=100)
+    surname = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    region = models.CharField(max_length=100, blank=True, null=True)
+    zip_code = models.CharField(max_length=100)
+    street = models.CharField(max_length=100)
     building_no = models.IntegerField()
     apart_no = models.IntegerField(blank=True, null=True)
     phone = models.IntegerField()
-    email = models.CharField(max_length=-1)
+    email = models.CharField(max_length=100)
 
     class Meta:
         managed = False
@@ -150,7 +150,7 @@ class DjangoSession(models.Model):
 
 class Manufacturers(models.Model):
     manufacturer_id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=-1)
+    name = models.CharField(max_length=100)
 
     class Meta:
         managed = False
@@ -196,9 +196,9 @@ class Orders(models.Model):
 
 class Products(models.Model):
     pid = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=-1)
+    name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
-    image_source = models.CharField(max_length=-1, blank=True, null=True)
+    image_source = models.CharField(max_length=100, blank=True, null=True)
     manufacturers_categories = models.ForeignKey(ManufacturersCategories, models.DO_NOTHING, db_column='manufacturers_categories', blank=True, null=True)
     price_gross = models.DecimalField(max_digits=65535, decimal_places=65535)
     vat_tax = models.DecimalField(max_digits=65535, decimal_places=65535, blank=True, null=True)

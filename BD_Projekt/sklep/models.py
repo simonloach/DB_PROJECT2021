@@ -9,7 +9,7 @@ from django.db import models
 
 
 class AuthGroup(models.Model):
-    name = models.CharField(unique=True, max_length=150)
+    name = models.CharField(unique=True, max_length=255)
 
     class Meta:
         managed = False
@@ -29,7 +29,7 @@ class AuthGroupPermissions(models.Model):
 class AuthPermission(models.Model):
     name = models.CharField(max_length=255)
     content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING)
-    codename = models.CharField(max_length=100)
+    codename = models.CharField(max_length=255)
 
     class Meta:
         managed = False
@@ -38,13 +38,13 @@ class AuthPermission(models.Model):
 
 
 class AuthUser(models.Model):
-    password = models.CharField(max_length=128)
+    password = models.CharField(max_length=255)
     last_login = models.DateTimeField(blank=True, null=True)
     is_superuser = models.BooleanField()
-    username = models.CharField(unique=True, max_length=150)
-    first_name = models.CharField(max_length=150)
-    last_name = models.CharField(max_length=150)
-    email = models.CharField(max_length=254)
+    username = models.CharField(unique=True, max_length=255)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    email = models.CharField(max_length=255)
     is_staff = models.BooleanField()
     is_active = models.BooleanField()
     date_joined = models.DateTimeField()
@@ -76,7 +76,7 @@ class AuthUserUserPermissions(models.Model):
 
 class Categories(models.Model):
     cid = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=-1)
+    name = models.CharField(max_length=255)
     parent_cid = models.IntegerField(blank=True, null=True)
 
     class Meta:
@@ -86,18 +86,18 @@ class Categories(models.Model):
 
 class Clients(models.Model):
     client_id = models.IntegerField(primary_key=True)
-    login = models.CharField(max_length=-1)
-    sha_pass = models.CharField(db_column='SHA_pass', max_length=-1)  # Field name made lowercase.
-    name = models.CharField(max_length=-1)
-    surname = models.CharField(max_length=-1)
-    city = models.CharField(max_length=-1)
-    region = models.CharField(max_length=-1, blank=True, null=True)
-    zip_code = models.CharField(max_length=-1)
-    street = models.CharField(max_length=-1)
+    login = models.CharField(max_length=255)
+    sha_pass = models.CharField(db_column='SHA_pass', max_length=255)  # Field name made lowercase.
+    name = models.CharField(max_length=255)
+    surname = models.CharField(max_length=255)
+    city = models.CharField(max_length=255)
+    region = models.CharField(max_length=255, blank=True, null=True)
+    zip_code = models.CharField(max_length=255)
+    street = models.CharField(max_length=255)
     building_no = models.IntegerField()
     apart_no = models.IntegerField(blank=True, null=True)
     phone = models.IntegerField()
-    email = models.CharField(max_length=-1)
+    email = models.CharField(max_length=255)
 
     class Meta:
         managed = False
@@ -107,7 +107,7 @@ class Clients(models.Model):
 class DjangoAdminLog(models.Model):
     action_time = models.DateTimeField()
     object_id = models.TextField(blank=True, null=True)
-    object_repr = models.CharField(max_length=200)
+    object_repr = models.CharField(max_length=255)
     action_flag = models.SmallIntegerField()
     change_message = models.TextField()
     content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING, blank=True, null=True)
@@ -119,8 +119,8 @@ class DjangoAdminLog(models.Model):
 
 
 class DjangoContentType(models.Model):
-    app_label = models.CharField(max_length=100)
-    model = models.CharField(max_length=100)
+    app_label = models.CharField(max_length=255)
+    model = models.CharField(max_length=255)
 
     class Meta:
         managed = False
@@ -139,7 +139,7 @@ class DjangoMigrations(models.Model):
 
 
 class DjangoSession(models.Model):
-    session_key = models.CharField(primary_key=True, max_length=40)
+    session_key = models.CharField(primary_key=True, max_length=255)
     session_data = models.TextField()
     expire_date = models.DateTimeField()
 
@@ -150,7 +150,7 @@ class DjangoSession(models.Model):
 
 class Manufacturers(models.Model):
     manufacturer_id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=-1)
+    name = models.CharField(max_length=255)
 
     class Meta:
         managed = False
@@ -196,14 +196,13 @@ class Orders(models.Model):
 
 class Products(models.Model):
     pid = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=-1)
+    name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
-    image_source = models.CharField(max_length=-1, blank=True, null=True)
+    image_source = models.CharField(max_length=255, blank=True, null=True)
     manufacturers_categories = models.ForeignKey(ManufacturersCategories, models.DO_NOTHING, db_column='manufacturers_categories', blank=True, null=True)
     price_gross = models.DecimalField(max_digits=65535, decimal_places=65535)
     vat_tax = models.DecimalField(max_digits=65535, decimal_places=65535, blank=True, null=True)
     no_instock = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'products'

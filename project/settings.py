@@ -130,4 +130,4 @@ STATICFILES_DIRS = [
     BASE_DIR / "sklep/static",
     ]
 
-STATIC_ROOT = '/home/g12.labagh.pl/public_html'
+STATIC_ROOT = '/home/g12.labagh.pl/public_html/'

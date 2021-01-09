@@ -74,17 +74,17 @@ class AuthUserUserPermissions(models.Model):
         unique_together = (('user', 'permission'),)
 
 
-class Categories(models.Model):
+class Categorie(models.Model):
     cid = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100)
     parent_cid = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'categories'
+        db_table = 'categorie'
 
 
-class Clients(models.Model):
+class Client(models.Model):
     client_id = models.IntegerField(primary_key=True)
     login = models.CharField(max_length=100)
     sha_pass = models.CharField(db_column='SHA_pass', max_length=100)  # Field name made lowercase.
@@ -101,7 +101,7 @@ class Clients(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'clients'
+        db_table = 'client'
 
 
 class DjangoAdminLog(models.Model):
@@ -148,40 +148,28 @@ class DjangoSession(models.Model):
         db_table = 'django_session'
 
 
-class Manufacturers(models.Model):
+class Manufacturer(models.Model):
     manufacturer_id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100)
 
     class Meta:
         managed = False
-        db_table = 'manufacturers'
+        db_table = 'manufacturer'
 
 
-class ManufacturersCategories(models.Model):
+class ManufacturersCategorie(models.Model):
     manufacturers_categories = models.IntegerField(primary_key=True)
-    manufacturer = models.ForeignKey(Manufacturers, models.DO_NOTHING, blank=True, null=True)
-    cid = models.ForeignKey(Categories, models.DO_NOTHING, db_column='cid', blank=True, null=True)
+    manufacturer = models.ForeignKey(Manufacturer, models.DO_NOTHING, blank=True, null=True)
+    cid = models.ForeignKey(Categorie, models.DO_NOTHING, db_column='cid', blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'manufacturers_categories'
+        db_table = 'manufacturers_categorie'
 
 
-class OrderedProducts(models.Model):
-    ordered_product_id = models.IntegerField(primary_key=True)
-    oid = models.ForeignKey('Orders', models.DO_NOTHING, db_column='oid', blank=True, null=True)
-    pid = models.ForeignKey('Products', models.DO_NOTHING, db_column='pid', blank=True, null=True)
-    product_quantity = models.IntegerField()
-    product_price = models.DecimalField(max_digits=65535, decimal_places=65535)
-
-    class Meta:
-        managed = False
-        db_table = 'ordered_products'
-
-
-class Orders(models.Model):
+class Order(models.Model):
     oid = models.IntegerField(primary_key=True)
-    client = models.ForeignKey(Clients, models.DO_NOTHING)
+    client = models.ForeignKey(Client, models.DO_NOTHING)
     order_placed_date = models.DateTimeField()
     order_taken_date = models.DateTimeField(blank=True, null=True)
     shipping_date = models.DateTimeField(blank=True, null=True)
@@ -191,19 +179,31 @@ class Orders(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'orders'
+        db_table = 'order'
 
 
-class Products(models.Model):
+class OrderedProduct(models.Model):
+    ordered_product_id = models.IntegerField(primary_key=True)
+    oid = models.ForeignKey(Order, models.DO_NOTHING, db_column='oid', blank=True, null=True)
+    pid = models.ForeignKey('Product', models.DO_NOTHING, db_column='pid', blank=True, null=True)
+    product_quantity = models.IntegerField()
+    product_price = models.DecimalField(max_digits=65535, decimal_places=65535)
+
+    class Meta:
+        managed = False
+        db_table = 'ordered_product'
+
+
+class Product(models.Model):
     pid = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
     image_source = models.CharField(max_length=100, blank=True, null=True)
-    manufacturers_categories = models.ForeignKey(ManufacturersCategories, models.DO_NOTHING, db_column='manufacturers_categories', blank=True, null=True)
+    manufacturers_categories = models.ForeignKey(ManufacturersCategorie, models.DO_NOTHING, db_column='manufacturers_categories', blank=True, null=True)
     price_gross = models.DecimalField(max_digits=65535, decimal_places=65535)
     vat_tax = models.DecimalField(max_digits=65535, decimal_places=65535, blank=True, null=True)
     no_instock = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'products'
+        db_table = 'product'

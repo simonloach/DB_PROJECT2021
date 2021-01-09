@@ -205,4 +205,4 @@ class Products(models.Model):
     no_instock = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        db_table = 'products'
+        db_table = 'product'

@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
     <!-- Bootstrap CSS-->
-    <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css'%}">
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.css'%}">
     <!-- Font Awesome CSS-->
     <link rel="stylesheet" href="{% static 'vendor/font-awesome/css/font-awesome.min.css'%}">
     <!-- Google fonts - Roboto -->
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="{% static 'vendor/owl.carousel/assets/owl.carousel.css'%}">
     <link rel="stylesheet" href="{% static 'vendor/owl.carousel/assets/owl.theme.default.css'%}">
     <!-- theme stylesheet-->
-    <link rel="stylesheet" href="{% static 'css/style.default.css'%}" id="theme-stylesheet'%}">
+    <link rel="stylesheet" href="{% static 'css/style.blue.css'%}" id="theme-stylesheet'%}">
     <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="{% static 'css/custom.css'%}">
     <!-- Favicon-->
@@ -35,6 +35,7 @@
         <div class="container">
           <div class="row">
             <div class="col-lg-6 offer mb-3 mb-lg-0">
+            </div>
             <div class="col-lg-6 text-center text-lg-right">
               <ul class="menu list-inline mb-0">
                 <li class="list-inline-item"><a href="#" data-toggle="modal" data-target="#login-modal">Login</a></li>
@@ -72,9 +73,9 @@
       <!-- *** TOP BAR END ***-->
       <nav class="navbar navbar-expand-lg">
         <div class="container">
-          <a href="index.html" class="navbar-brand home">
-            <img src="img/logo.png" alt="Obaju logo" class="d-none d-md-inline-block">
-            <img src="img/logo-small.png" alt="Obaju logo" class="d-inline-block d-md-none">
+          <a href="" class="navbar-brand home">
+            <img src="{% static 'img/logo.png'%}" alt="Obaju logo" class="d-none d-md-inline-block">
+            <img src="{% static 'img/logo-small.png'%}" alt="Obaju logo" class="d-inline-block d-md-none">
             <span class="sr-only">Go to homepage</span>
           </a>
           <div class="navbar-buttons">

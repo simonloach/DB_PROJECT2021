@@ -6,4 +6,6 @@ from sklep.models import Product
 
 
 def index(request):
-    return render(request, 'sklep/index.html', Product)
+    top_products = Product.objects.all()[:5]
+    context = {'top_products': top_products}
+    return render(request, 'sklep/index.html', context)

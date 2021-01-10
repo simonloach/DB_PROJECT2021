@@ -201,8 +201,8 @@ class Product(models.Model):
     description = models.TextField(blank=True, null=True)
     image_source = models.CharField(max_length=100, blank=True, null=True)
     manufacturers_categories = models.ForeignKey(ManufacturersCategorie, models.DO_NOTHING, db_column='manufacturers_categories', blank=True, null=True)
-    price_gross = models.DecimalField(max_digits=65535, decimal_places=65535)
-    vat_tax = models.DecimalField(max_digits=65535, decimal_places=65535, blank=True, null=True)
+    price_gross = models.DecimalField(max_digits=1023, decimal_places=255)
+    vat_tax = models.DecimalField(max_digits=1023, decimal_places=31, blank=True, null=True)
     no_instock = models.IntegerField(blank=True, null=True)
 
     class Meta:

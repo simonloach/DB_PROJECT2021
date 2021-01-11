@@ -1,4 +1,3 @@
-
 # This is an auto-generated Django model module.
 # You'll have to do the following manually to clean this up:
 #   * Rearrange models' order
@@ -10,7 +9,7 @@ from django.db import models
 
 
 class AuthGroup(models.Model):
-    name = models.CharField(unique=True, max_length=255)
+    name = models.CharField(unique=True, max_length=150)
 
     class Meta:
         managed = False
@@ -30,7 +29,7 @@ class AuthGroupPermissions(models.Model):
 class AuthPermission(models.Model):
     name = models.CharField(max_length=255)
     content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING)
-    codename = models.CharField(max_length=255)
+    codename = models.CharField(max_length=100)
 
     class Meta:
         managed = False
@@ -39,13 +38,13 @@ class AuthPermission(models.Model):
 
 
 class AuthUser(models.Model):
-    password = models.CharField(max_length=255)
+    password = models.CharField(max_length=128)
     last_login = models.DateTimeField(blank=True, null=True)
     is_superuser = models.BooleanField()
-    username = models.CharField(unique=True, max_length=255)
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    email = models.CharField(max_length=255)
+    username = models.CharField(unique=True, max_length=150)
+    first_name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150)
+    email = models.CharField(max_length=254)
     is_staff = models.BooleanField()
     is_active = models.BooleanField()
     date_joined = models.DateTimeField()
@@ -73,6 +72,17 @@ class AuthUserUserPermissions(models.Model):
         managed = False
         db_table = 'auth_user_user_permissions'
         unique_together = (('user', 'permission'),)
+
+
+class Cart(models.Model):
+    cart_id = models.IntegerField(primary_key=True)
+    client = models.ForeignKey('Client', models.DO_NOTHING, blank=True, null=True)
+    pid = models.IntegerField(blank=True, null=True)
+    quantity = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'cart'
 
 
 class Categorie(models.Model):
@@ -108,7 +118,7 @@ class Client(models.Model):
 class DjangoAdminLog(models.Model):
     action_time = models.DateTimeField()
     object_id = models.TextField(blank=True, null=True)
-    object_repr = models.CharField(max_length=255)
+    object_repr = models.CharField(max_length=200)
     action_flag = models.SmallIntegerField()
     change_message = models.TextField()
     content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING, blank=True, null=True)
@@ -120,8 +130,8 @@ class DjangoAdminLog(models.Model):
 
 
 class DjangoContentType(models.Model):
-    app_label = models.CharField(max_length=255)
-    model = models.CharField(max_length=255)
+    app_label = models.CharField(max_length=100)
+    model = models.CharField(max_length=100)
 
     class Meta:
         managed = False
@@ -140,7 +150,7 @@ class DjangoMigrations(models.Model):
 
 
 class DjangoSession(models.Model):
-    session_key = models.CharField(primary_key=True, max_length=255)
+    session_key = models.CharField(primary_key=True, max_length=40)
     session_data = models.TextField()
     expire_date = models.DateTimeField()
 

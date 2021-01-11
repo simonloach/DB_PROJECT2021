@@ -22,7 +22,7 @@
     <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="{% static 'css/custom.css'%}">
     <!-- Favicon-->
-    <link rel="shortcut icon" href="{% static 'favicon.png'%}">
+    <link rel="shortcut icon" href="{% static 'img/favicon.png'%}">
     <!-- Tweaks for older IEs--><!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
@@ -250,7 +250,67 @@
           <!-- /.container-->
         </div>
         <!-- /#advantages-->
+        <div id="hot">
+          <div class="box py-4">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-12">
+                  <h2 class="mb-0">Hot this week</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="product-slider owl-carousel owl-theme">
+
+              {% if top_products %}
+                {% for product in top_products %}
+                <div class="item">
+                  <div class="product">
+                    <div class="flip-container">
+                      <div class="flipper">
+                          <div class="front"><a href="detail.html"><img src="{% static product.img_dir_list.0 %}" alt="" class="img-fluid"></a></div>
+                          <div class="back"><a href="detail.html"><img src="{% static product.img_dir_list.1 %}" alt="" class="img-fluid"></a></div>
+                      </div>
+                    </div><a href="detail.html" class="invisible"><img src="{% static product.img_dir_list.0 %}" alt="" class="img-fluid"></a>
+                    <div class="text">
+                      <h3><a href="detail.html">{{ product.name }}</a></h3>
+                      <p class="price"> 
+                        <del></del>${{ product.price_gross|stringformat:"f" }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                {%endfor%}
+              {% else %}
+                <a>Nie ma jeszcze żadnych produktów w bazie, ale działa</a>
+              {% endif %}
+
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
+    <div id="copyright">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 mb-2 mb-lg-0">
+            <p class="text-center text-lg-left">©2021 Szymon Piskorz, Jarek Żelechowski, Konrad Springer</p>
+          </div>
+          <div class="col-lg-6">
+            <p class="text-center text-lg-right">Template design by <a href="https://bootstrapious.com/">Bootstrapious</a>
+              <!-- If you want to remove this backlink, pls purchase an Attribution-free License @ https://bootstrapious.com/p/obaju-e-commerce-template. Big thanks!-->
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="{% static 'vendor/jquery/jquery.js'%}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.js'%}"></script>
+    <script src="{% static 'vendor/jquery.cookie/jquery.cookie.js'%}"> </script>
+    <script src="{% static 'vendor/owl.carousel/owl.carousel.js'%}"></script>
+    <script src="{% static 'vendor/owl.carousel2.thumbs/owl.carousel2.thumbs.js'%}"></script>
+    <script src="{% static 'js/front.js'%}"></script>
   </body>

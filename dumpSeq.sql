@@ -7,9 +7,9 @@
 -- Database creation must be performed outside a multi lined SQL file. 
 -- These commands were put in this file only as a convenience.
 -- 
--- object: online_shop | type: DATABASE --
--- DROP DATABASE IF EXISTS online_shop;
-CREATE DATABASE online_shop;
+-- object: g12 | type: DATABASE --
+-- DROP DATABASE IF EXISTS g12;
+CREATE DATABASE g12;
 -- ddl-end --
 
 

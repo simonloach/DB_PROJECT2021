@@ -217,6 +217,10 @@ class Product(models.Model):
     on_sale = models.BooleanField(blank=True, null=True)
     sale_price_gross = models.DecimalField(max_digits=2, decimal_places=2, blank=True, null=True)
 
+    __str__(self):
+        return f'\nPID: {self.pid}\n NAME: {self.name}\n IMG_SRC: {self.image_source}\n MANUFACTURERS CATEGORIE: {self.manufacturers_categorie}\n'
+    
+
     class Meta:
         managed = False
         db_table = 'product'

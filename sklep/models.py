@@ -198,7 +198,7 @@ class OrderedProduct(models.Model):
     oid = models.ForeignKey(Order, models.DO_NOTHING, db_column='oid', blank=True, null=True)
     pid = models.ForeignKey('Product', models.DO_NOTHING, db_column='pid', blank=True, null=True)
     product_quantity = models.IntegerField()
-    product_price = models.DecimalField(max_digits=2, decimal_places=2)
+    product_price = models.DecimalField(max_digits=50, decimal_places=2)
 
     class Meta:
         managed = False
@@ -218,7 +218,8 @@ class Product(models.Model):
     sale_price_gross = models.DecimalField(max_digits=2, decimal_places=2, blank=True, null=True)
 
     __str__(self):
-        return f'\nPID: {self.pid}\n NAME: {self.name}\n IMG_SRC: {self.image_source}\n MANUFACTURERS CATEGORIE: {self.manufacturers_categorie}\n'
+    result = f'\nPID: {self.pid}\n NAME: {self.name}\n IMG_SRC: {self.image_source}\n MANUFACTURERS CATEGORIE: {self.manufacturers_categorie}\n'
+        return result
     
 
     class Meta:

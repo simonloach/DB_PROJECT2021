@@ -127,7 +127,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    BASE_DIR / "sklep/static",
     ]
 
+<<<<<<< HEAD
 STATIC_ROOT = '/home/g12.labagh.pl/public_html/'
+=======
+STATIC_ROOT = '/home/g12.labagh.pl/public_html/'
+>>>>>>> 93fe773102db0a59de27f6f728b70c65ff29e89c

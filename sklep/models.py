@@ -1,4 +1,3 @@
-
 # This is an auto-generated Django model module.
 # You'll have to do the following manually to clean this up:
 #   * Rearrange models' order
@@ -10,7 +9,7 @@ from django.db import models
 
 
 class AuthGroup(models.Model):
-    name = models.CharField(unique=True, max_length=255)
+    name = models.CharField(unique=True, max_length=150)
 
     class Meta:
         managed = False
@@ -30,7 +29,7 @@ class AuthGroupPermissions(models.Model):
 class AuthPermission(models.Model):
     name = models.CharField(max_length=255)
     content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING)
-    codename = models.CharField(max_length=255)
+    codename = models.CharField(max_length=100)
 
     class Meta:
         managed = False
@@ -39,13 +38,13 @@ class AuthPermission(models.Model):
 
 
 class AuthUser(models.Model):
-    password = models.CharField(max_length=255)
+    password = models.CharField(max_length=128)
     last_login = models.DateTimeField(blank=True, null=True)
     is_superuser = models.BooleanField()
-    username = models.CharField(unique=True, max_length=255)
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    email = models.CharField(max_length=255)
+    username = models.CharField(unique=True, max_length=150)
+    first_name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150)
+    email = models.CharField(max_length=254)
     is_staff = models.BooleanField()
     is_active = models.BooleanField()
     date_joined = models.DateTimeField()
@@ -75,8 +74,19 @@ class AuthUserUserPermissions(models.Model):
         unique_together = (('user', 'permission'),)
 
 
+class Cart(models.Model):
+    cart_id = models.AutoField(primary_key=True)
+    client = models.ForeignKey('Client', models.DO_NOTHING, blank=True, null=True)
+    pid = models.ForeignKey('Product', models.DO_NOTHING, db_column='pid', blank=True, null=True)
+    quantity = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'cart'
+
+
 class Categorie(models.Model):
-    cid = models.IntegerField(primary_key=True)
+    cid = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     parent_cid = models.IntegerField(blank=True, null=True)
 
@@ -86,14 +96,14 @@ class Categorie(models.Model):
 
 
 class Client(models.Model):
-    client_id = models.IntegerField(primary_key=True)
+    client_id = models.AutoField(primary_key=True)
     login = models.CharField(max_length=100)
     sha_pass = models.CharField(db_column='SHA_pass', max_length=100)  # Field name made lowercase.
     name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
     region = models.CharField(max_length=100, blank=True, null=True)
-    zip_code = models.CharField(max_length=100)
+    zip_code = models.CharField(max_length=10)
     street = models.CharField(max_length=100)
     building_no = models.IntegerField()
     apart_no = models.IntegerField(blank=True, null=True)
@@ -108,7 +118,7 @@ class Client(models.Model):
 class DjangoAdminLog(models.Model):
     action_time = models.DateTimeField()
     object_id = models.TextField(blank=True, null=True)
-    object_repr = models.CharField(max_length=255)
+    object_repr = models.CharField(max_length=200)
     action_flag = models.SmallIntegerField()
     change_message = models.TextField()
     content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING, blank=True, null=True)
@@ -120,8 +130,8 @@ class DjangoAdminLog(models.Model):
 
 
 class DjangoContentType(models.Model):
-    app_label = models.CharField(max_length=255)
-    model = models.CharField(max_length=255)
+    app_label = models.CharField(max_length=100)
+    model = models.CharField(max_length=100)
 
     class Meta:
         managed = False
@@ -140,7 +150,7 @@ class DjangoMigrations(models.Model):
 
 
 class DjangoSession(models.Model):
-    session_key = models.CharField(primary_key=True, max_length=255)
+    session_key = models.CharField(primary_key=True, max_length=40)
     session_data = models.TextField()
     expire_date = models.DateTimeField()
 
@@ -150,7 +160,7 @@ class DjangoSession(models.Model):
 
 
 class Manufacturer(models.Model):
-    manufacturer_id = models.IntegerField(primary_key=True)
+    manufacturer_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
 
     class Meta:
@@ -159,7 +169,7 @@ class Manufacturer(models.Model):
 
 
 class ManufacturersCategorie(models.Model):
-    manufacturers_categories = models.IntegerField(primary_key=True)
+    manufacturers_categorie_id = models.AutoField(primary_key=True)
     manufacturer = models.ForeignKey(Manufacturer, models.DO_NOTHING, blank=True, null=True)
     cid = models.ForeignKey(Categorie, models.DO_NOTHING, db_column='cid', blank=True, null=True)
 
@@ -169,7 +179,7 @@ class ManufacturersCategorie(models.Model):
 
 
 class Order(models.Model):
-    oid = models.IntegerField(primary_key=True)
+    oid = models.AutoField(primary_key=True)
     client = models.ForeignKey(Client, models.DO_NOTHING)
     order_placed_date = models.DateTimeField()
     order_taken_date = models.DateTimeField(blank=True, null=True)
@@ -184,11 +194,11 @@ class Order(models.Model):
 
 
 class OrderedProduct(models.Model):
-    ordered_product_id = models.IntegerField(primary_key=True)
+    ordered_product_id = models.AutoField(primary_key=True)
     oid = models.ForeignKey(Order, models.DO_NOTHING, db_column='oid', blank=True, null=True)
     pid = models.ForeignKey('Product', models.DO_NOTHING, db_column='pid', blank=True, null=True)
     product_quantity = models.IntegerField()
-    product_price = models.DecimalField(max_digits=65535, decimal_places=65535)
+    product_price = models.DecimalField(max_digits=2, decimal_places=2)
 
     class Meta:
         managed = False
@@ -196,14 +206,16 @@ class OrderedProduct(models.Model):
 
 
 class Product(models.Model):
-    pid = models.IntegerField(primary_key=True)
+    pid = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
     image_source = models.CharField(max_length=100, blank=True, null=True)
-    manufacturers_categories = models.ForeignKey(ManufacturersCategorie, models.DO_NOTHING, db_column='manufacturers_categories', blank=True, null=True)
-    price_gross = models.DecimalField(max_digits=65535, decimal_places=65535)
-    vat_tax = models.DecimalField(max_digits=65535, decimal_places=65535, blank=True, null=True)
+    manufacturers_categorie = models.ForeignKey(ManufacturersCategorie, models.DO_NOTHING, blank=True, null=True)
+    price_gross = models.DecimalField(max_digits=2, decimal_places=2)
+    vat_tax = models.DecimalField(max_digits=2, decimal_places=2, blank=True, null=True)
     no_instock = models.IntegerField(blank=True, null=True)
+    on_sale = models.BooleanField(blank=True, null=True)
+    sale_price_gross = models.DecimalField(max_digits=2, decimal_places=2, blank=True, null=True)
 
     class Meta:
         managed = False

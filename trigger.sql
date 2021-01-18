@@ -1,8 +1,9 @@
+DROP FUNCTION function() CASCADE ;
 CREATE OR REPLACE FUNCTION refreshStock()
 RETURNS TRIGGER AS $trigger$
 	BEGIN
 		UPDATE product
-		SET no_instock = COALESCE(no_instock, 0) - NEW.product.quantity
+		SET no_instock = COALESCE(no_instock, 0) - NEW.product_quantity
 		WHERE product.pid = NEW.pid;
 		return NEW;
 
@@ -12,4 +13,4 @@ RETURNS TRIGGER AS $trigger$
 CREATE TRIGGER trigger
 	AFTER INSERT ON ordered_product
 	FOR EACH ROW
-	EXECUTE PROCEDURE function();
+	EXECUTE PROCEDURE refreshStock();

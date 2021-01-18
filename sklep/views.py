@@ -10,6 +10,9 @@ def index(request):
     context = {'top_products': top_products}
     return render(request, 'sklep/index.html', context)
 
+def register(request):
+    return render(request, 'sklep/register.html')
+
 def base(request):
     return render(request, 'sklep/base.html')
     

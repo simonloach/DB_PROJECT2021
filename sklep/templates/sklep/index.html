@@ -264,6 +264,7 @@
             <div class="product-slider owl-carousel owl-theme">
 
               {% if top_products %}
+		dupa1234 debug test
                 {% for product in top_products %}
                 <div class="item">
                   <div class="product">
@@ -271,6 +272,7 @@
                       <div class="flipper">
                           <div class="front"><a href="detail.html"><img src="{% static product.img_dir_list.0 %}" alt="" class="img-fluid"></a></div>
                           <div class="back"><a href="detail.html"><img src="{% static product.img_dir_list.1 %}" alt="" class="img-fluid"></a></div>
+			  <div class="back"><a href="detail.html"><img src="/sklep/static/db_temp_img/3/kabeleth1.jpg" alt="" class="img-fluid"></a></div>
                       </div>
                     </div><a href="detail.html" class="invisible"><img src="{% static product.img_dir_list.0 %}" alt="" class="img-fluid"></a>
                     <div class="text">

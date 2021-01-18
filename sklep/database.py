@@ -1,5 +1,5 @@
 import psycopg2
-
+import psycopg2.extras
 
 #get rid of hardcoding later
 username = 'g12'
@@ -53,20 +53,18 @@ def getCategoryTree(cid):
     finally:
         if conn is not None:
             conn.close()
-
 def getBestSelling(days,count):
     conn = None
     days = str(days)
     try:
         conn = getConn()
-        cur = conn.cursor()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
         with cur:
-            cur.execute("select * from product join"
-                        " (select op.pid from ordered_product op inner join"
+            cur.execute("select * from product where product.no_instock != 0 and "
+                        "product.pid IN (select op.pid from ordered_product op inner join"
                         " \"order\" o  on op.oid = o.oid   "
                         "where o.order_placed_date > current_date - interval %s day  "
-                        "group by op.pid order by count(op.pid) desc limit %s) m on m.pid = product.pid"
-                        " where product.no_instock > 0;"
+                        "group by op.pid order by count(op.pid) desc limit %s);"
                         ,[days,count])
 
             return cur.fetchall()
@@ -75,8 +73,9 @@ def getBestSelling(days,count):
         print(error)
 
     finally:
-        if cur is not None:
-            cur.close()
+        if conn is not None:
+            conn.close()
+
 
 
 def getByLowestInStock(count):
@@ -99,6 +98,8 @@ def getByLowestInStock(count):
 
 
 
-
-print(getBestSelling(10,10))
+dupa = getBestSelling(100,100)
+print(dupa)
+for product in dupa:
+    print(product.name)
 

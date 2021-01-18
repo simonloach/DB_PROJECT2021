@@ -1,6 +1,16 @@
 import psycopg2
 import psycopg2.extras
 
+
+
+# funkcje zwracaja liste tupli po ktorych mozna sobie iterowac i potem wyciagac poszczegolne kolumny np:
+# dupa = getBestSelling(10,10)
+# for product in dupa:
+#    print(product.name)
+
+#TODO: castowanie surowych danych z bazy na klasy z models.py
+
+
 #get rid of hardcoding later
 username = 'g12'
 password = 'gwao6hn4'
@@ -14,14 +24,20 @@ def getConn():
         host = host,
         port = port)
 
-
     return conn
 
+def getTupleCursor():
+    conn = getConn()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
+    return cur
+
+
+
+# podaj cid powiem ci jakie sa wszystkie kategorie nad nim, lacznie z podanym
 def getCategoryTree(cid):
-    conn = None
+
     try:
-        conn = getConn()
-        cur = conn.cursor()
+        cur = getTupleCursor()
         with cur:
             cur.execute("WITH RECURSIVE superiors AS ("
             "SELECT"
@@ -50,15 +66,13 @@ def getCategoryTree(cid):
     except (psycopg2.DatabaseError) as error:
         print(error)
 
-    finally:
-        if conn is not None:
-            conn.close()
+
+# zwraca najlepiej sprzedajace sie produkty w ostatnich dniach days (int) oraz ile tych 
+# najpopularniejszych produktow zwrocic ( count ( int))
 def getBestSelling(days,count):
-    conn = None
     days = str(days)
     try:
-        conn = getConn()
-        cur = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
+        cur = getTupleCursor()
         with cur:
             cur.execute("select * from product where product.no_instock != 0 and "
                         "product.pid IN (select op.pid from ordered_product op inner join"
@@ -72,17 +86,10 @@ def getBestSelling(days,count):
     except (psycopg2.DatabaseError) as error:
         print(error)
 
-    finally:
-        if conn is not None:
-            conn.close()
-
-
-
+# zwroc produkty ktorych mamy  najmniej na magazinie, ile ich chcemy zwrocic steruje zmienna count (int)
 def getByLowestInStock(count):
-    conn = None
     try:
-        conn = getConn()
-        cur = conn.cursor()
+        cur = getTupleCursor()
         with cur:
             cur.execute("select * from product where no_instock > 0 order by no_instock asc limit %s;",[count])
 
@@ -91,15 +98,15 @@ def getByLowestInStock(count):
     except (psycopg2.DatabaseError) as error:
         print(error)
 
-    finally:
-        if cur is not None:
-            cur.close()
 
+def getByHighestInStock(count):
+    try:
+        cur = getTupleCursor()
+        with cur:
+            cur.execute("select * from product where no_instock > 0 order by no_instock desc limit %s;",[count])
 
+            return cur.fetchall()
 
-
-dupa = getBestSelling(100,100)
-print(dupa)
-for product in dupa:
-    print(product.name)
+    except (psycopg2.DatabaseError) as error:
+        print(error)
 

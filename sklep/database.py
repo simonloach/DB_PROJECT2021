@@ -39,27 +39,27 @@ def getCategoryTree(cid):
     try:
         cur = getTupleCursor()
         with cur:
-            cur.execute("WITH RECURSIVE superiors AS ("
-            "SELECT"
-            "	cid,"
-        "		name,"
-        "		parent_cid"
-        "	FROM"
-        "		categorie"
-        "	WHERE"
-        "		cid = %s"
-        "	UNION"
-        "		SELECT"
-        "			c.cid,"
-        "			c.name,"
-        "			c.parent_cid"
-        "		FROM"
-        "			categorie c"
-        "		INNER JOIN superiors s ON s.parent_cid = c.cid"
-            ") SELECT"
-            "	*"
-            "FROM "
-            "superiors;", [cid])
+            cur.execute("""WITH RECURSIVE superiors AS (
+            SELECT
+            	cid,
+        		name,
+        		parent_cid
+        	FROM
+        		categorie
+        	WHERE
+        		cid = %s
+        	UNION
+        		SELECT
+        			c.cid,
+        		    c.name,
+        			c.parent_cid
+        		FROM
+        			categorie c
+        		INNER JOIN superiors s ON s.parent_cid = c.cid
+            ) SELECT
+            	*
+            FROM 
+            superiors;""", [cid])
 
             return cur.fetchall()
 

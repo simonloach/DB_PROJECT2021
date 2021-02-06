@@ -110,3 +110,53 @@ def getByHighestInStock(count):
     except (psycopg2.DatabaseError) as error:
         print(error)
 
+def getFirst2LevelsOfCat():
+    try:
+        cur = getTupleCursor()
+        with cur:
+            cur.execute("select * from categorie where parent_cid in (select cid from categorie where parent_cid is null);")
+
+            return cur.fetchall()
+
+    except psycopg2.DatabaseError as error:
+        print(error)
+
+def getToddlerCategories():
+    try:
+        cur = getTupleCursor()
+        with cur:
+            cur.execute("select * from categorie where parent_cid in (select cid from categorie where parent_cid in (select cid from categorie where parent_cid is null));")
+
+            return cur.fetchall()
+
+    except psycopg2.DatabaseError as error:
+        print(error)
+
+
+class DummyProduct():
+
+    def __init__(self, record):
+        self.pid = record.pid,
+        self.name = record.name,
+        self.description = record.description,
+        self.image_source = record.image_source,
+        self.manufacturers_categorie_id = record.manufacturers_categorie_id,
+        self.price_gross = record.price_gross,
+        self.vat_tax = record.vat_tax,
+        self.no_instock = record.no_instock,
+        self.on_sale = record.on_sale,
+        self.sale_price_gross = record.sale_price_gross
+    
+    
+    def img_as_list(self):
+        if self.image_source:
+            return self.image_source.split(',')
+        else: return ['img/no-image-found.png']
+
+    def img_dir_list(self):
+        img_list = []
+        for img in self.img_as_list():
+            img_list.append("db_temp_img/"+str(self.pid)+"/"+img)
+        if len(img_list) == 1: img_list.append(img_list[0])
+        return img_list
+

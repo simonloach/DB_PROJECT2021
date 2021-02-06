@@ -1,4 +1,3 @@
-
 {% extends 'sklep/base.html' %}
 {% block content %}
 {% load static %}
@@ -22,18 +21,16 @@
           <p class="text-muted">If you have any questions, please feel free to <a href="contact.html">contact us</a>, our customer service center is working for you 24/7.</p>
           <hr>
           <form action="customer-orders.html" method="post">
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input id="name" type="text" class="form-control">
-            </div>
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input id="email" type="text" class="form-control">
-            </div>
-            <div class="form-group">
-              <label for="password">Password</label>
-              <input id="password" type="password" class="form-control">
-            </div>
+              {% csrf_token %}
+              {% for field in registerForm %}
+                <div class="form-group">
+                  <label for="name">{{ field.label_tag }}</label>
+                  {{ field}}
+                {% for error in field.errors %}
+                <p style="color: red">{{ error }}</p>
+                {% endfor %}
+                </div>
+              {%endfor%}
             <div class="text-center">
               <button type="submit" class="btn btn-primary"><i class="fa fa-user-md"></i> Register</button>
             </div>

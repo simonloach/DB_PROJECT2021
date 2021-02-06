@@ -26,3 +26,10 @@ def register(request):
 def base(request):
     return render(request, 'sklep/base.html')
     
+
+def product(request, product_id):
+    try:
+        product = Product.objects.get(pid=product_id)
+    except Question.DoesNotExist:
+        raise Http404("Product does not exist")
+    return render(request, 'sklep/product.html', {'product': product, 'product_id':product_id})

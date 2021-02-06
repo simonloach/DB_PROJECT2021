@@ -96,7 +96,7 @@
                              {% for child in child_categories %}
                               {% if child.parent_cid == parent.cid %}
                               <div class="col-md-6 col-lg-3">
-                                <h5>{{ child.name}}</h5>
+                                <h5><a href="category.html"> {{ child.name}}  </a></h5>
                                   <ul class="list-unstyled mb-3">
                                   {% for toddler in toddler_categories %}
                                    {% if toddler.parent_cid == child.cid %}
@@ -116,6 +116,7 @@
                   {%endfor%}
              </li>
             </ul>
+          <!-- tu sie konczy pasek z kategoriami-->
             <div class="navbar-buttons d-flex justify-content-end">
               <!-- /.nav-collapse-->
               <div id="search-not-mobile" class="navbar-collapse collapse"></div><a data-toggle="collapse" href="#search" class="btn navbar-btn btn-primary d-none d-lg-inline-block"><span class="sr-only">Toggle search</span><i class="fa fa-search"></i></a>

@@ -5,12 +5,12 @@
                 <div class="product">
                     <div class="flip-container">
                         <div class="flipper">
-                            <div class="front"><a href="detail.html"><img src="{% static product.img_dir_list.0 %}" alt="" class="img-fluid"></a></div>
-                            <div class="back"><a href="detail.html"><img src="{% static product.img_dir_list.1 %}" alt="" class="img-fluid"></a></div>
+                            <div class="front"><a href="/product/{{ product.pid }}/"><img src="{% static product.img_dir_list.0 %}" alt="" class="img-fluid"></a></div>
+                            <div class="back"><a href="/product/{{ product.pid }}/"><img src="{% static product.img_dir_list.1 %}" alt="" class="img-fluid"></a></div>
                         </div>
-                        </div><a href="detail.html" class="invisible"><img src="{% static product.img_dir_list.0 %}" alt="" class="img-fluid"></a>
+                        </div><a href="/product/{{ product.pid }}/" class="invisible"><img src="{% static product.img_dir_list.0 %}" alt="" class="img-fluid"></a>
                         <div class="text">
-                        <h3><a href="detail.html">{{ product.name }}</a></h3>
+                        <h3><a href="/product/{{ product.pid }}/">{{ product.name }}</a></h3>
                         <p class="price"> 
                             <del></del>${{ product.price_gross }}
                         </p>

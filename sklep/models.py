@@ -94,6 +94,9 @@ class Categorie(models.Model):
         managed = False
         db_table = 'categorie'
 
+    def __str__(self):
+        return self.name
+
 
 class Client(models.Model):
     client_id = models.AutoField(primary_key=True)

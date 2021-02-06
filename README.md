@@ -12,5 +12,5 @@
      * obsługa logowania i rejestracji
      * koszyk (dodawanie itp)
   3. SQL 
-     * jakieś zapytanie, żeby wylistowało 15 najlepiej sprzedających się produktów tygodnia
-     * może jakiaś tabela z promocjami na produkty, których jest za mało albo za dużo 
+     * jakieś zapytanie, żeby wylistowało 15 najlepiej sprzedających się produktów tygodnia DONE
+     * może jakiaś tabela z promocjami na produkty, których jest za mało albo za dużo DONE

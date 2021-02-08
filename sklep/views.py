@@ -1,8 +1,8 @@
 # from django.shortcuts import render
 from sklep import database
 from django.http import HttpResponse, Http404
-from django.shortcuts import render
-from sklep.models import Product, Categorie, ManufacturersCategorie
+from django.shortcuts import render, redirect
+from sklep.models import Product, Categorie, ManufacturersCategorie, Client
 from .forms import RegisterForm
 from .forms import LoginForm
 
@@ -18,10 +18,43 @@ def index(request):
     return render(request, 'sklep/index.html', context)
 
 def register(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+
+
+            name = form.cleaned_data['name']
+            surname = form.cleaned_data['surname']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            country = form.cleaned_data['country']
+            city = form.cleaned_data['city']
+            zip_code = form.cleaned_data['zip_code']
+            address = form.cleaned_data['address']
+            phone = form.cleaned_data['phone']
+
+            num_results = Client.objects.filter(email = email).count()
+            if num_results == 0:
+                Client.objects.create(
+                sha_pass = password,
+                email = email,
+                name=name,
+                surname = surname,
+                country = country,
+                city = city,
+                zip_code = zip_code,
+                street = address,
+                phone = phone,
+                )
+
+
+            return redirect('/thanks/')
+
     registerForm = RegisterForm()
     loginForm = LoginForm()
     context = {'registerForm': registerForm, 'loginForm':loginForm}
     return render(request, 'sklep/register.html', context)
+
 
 def base(request):
     return render(request, 'sklep/base.html')

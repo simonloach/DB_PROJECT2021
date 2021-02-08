@@ -1,0 +1,36 @@
+{% extends 'sklep/base.html' %}
+{% block content %}
+{% load static %}
+<div id="content">
+  <div id="hot">
+    <div class="box py-4">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <h2 class="mb-0">Searched phrase: {{ phrase }} </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+        {% if products %}
+            {% for product in products %}
+                <div class="col-md-3 col-sm-6">
+                    <div class="product same-height">
+                        <div class="flip-container">
+                            <div class="flipper">
+                                <div class="front"><a href="/details/{{ product.pid }}/"><img src="{% static product.img_dir_list.0 %}" alt="" class="img-fluid"></a></div>
+                                <div class="back"><a href="/details/{{ product.pid }}/"><img src="{% static product.img_dir_list.1 %}" alt="" class="img-fluid"></a></div>
+                            </div>
+                            </div><a href="/details/{{ product.pid }}/" class="invisible"><img src="{% static product.img_dir_list.0 %}" alt="" class="img-fluid"></a>
+                            <div class="text">
+                            <h3><a href="/details/{{ product.pid }}/">{{ product.name }}</a></h3>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

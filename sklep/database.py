@@ -98,6 +98,17 @@ def getByLowestInStock(count):
     except (psycopg2.DatabaseError) as error:
         print(error)
 
+def getSearchByName(name):
+    name = '%' + name.lower() + '%'
+    try: 
+        cur = getTupleCursor()
+        with cur:
+            cur.execute("SELECT * FROM product WHERE LOWER(name) LIKE %s OR LOWER(description) LIKE %s;", [name, name])
+
+            return cur.fetchall()
+
+    except (psycopg2.DatabaseError) as error:
+        print(error)
 
 def getByHighestInStock(count):
     try:

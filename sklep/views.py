@@ -9,7 +9,7 @@ from .forms import LoginForm
 
 def index(request):
 
-    top_products = Product.objects.all()
+    top_products = database.getBestSelling(1000, 25)
     parent_categories = Categorie.objects.all().filter(parent_cid = None)
     child_categories = database.getFirst2LevelsOfCat()
     toddler_categories = database.getToddlerCategories()
@@ -107,3 +107,16 @@ def detail(request, prod_id):
     return render(request, 'sklep/detail.html', {'category': category, 'parent_categories': parent_categories,
 		'child_categories': child_categories, 'toddler_categories': toddler_categories, 'category_products':category_products,
         'product':product, 'parent_categories_tree':parent_categories_tree, 'parent':parent })
+
+def search(request):
+    try:
+        phrase = request.GET.get('phrase', '')
+        products = database.getSearchByName(phrase)
+        parent_categories = Categorie.objects.all().filter(parent_cid = None)
+        child_categories = database.getFirst2LevelsOfCat()
+        toddler_categories = database.getToddlerCategories()
+    except Categorie.DoesNotExist:
+        raise Http404("Category does not exist")
+    return render(request, 'sklep/search.html', {'parent_categories': parent_categories,
+		'child_categories': child_categories, 'toddler_categories': toddler_categories,
+        'phrase':phrase, 'products':products})

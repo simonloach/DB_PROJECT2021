@@ -1,0 +1,106 @@
+{% extends 'sklep/base.html' %}
+{% block content %}
+{% load static %}
+<div id="content">
+  <div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <!-- breadcrumb-->
+            <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                {% for cat in parent_categories_tree %}
+                <li aria-current="page" class="breadcrumb-item"><a href="/category/{{cat.cid}}/">{{cat.name}}</a></li>
+                {% endfor %}
+                <li aria-current="page" class="breadcrumb-item active">{{category.name}}</li>
+            </ol>
+            </nav>
+        </div>
+        <div class="col-lg-3">
+            <!--
+            *** MENUS AND FILTERS ***
+            _________________________________________________________
+            -->
+            <div class="card sidebar-menu mb-4">
+            <div class="card-header">
+                    <h3 class="h4 card-title">{{parent.name}}</h3>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-pills flex-column category-menu">
+                {% for child in child_categories %}
+                    {% if child.parent_cid == parent.cid %}
+                        {% if child.cid == category.cid %}
+                            <li><a href="/category/{{child.cid}}" class="nav-link active">{{child.name}}<span class="badge badge-secondary">42</span></a>
+                                <ul class="list-unstyled">
+                                {% for toddler in toddler_categories %}
+                                   {% if toddler.parent_cid == child.cid %}
+                                        {% if toddler.cid == category.cid %}
+                                            <li><a href="/category/{{toddler.cid}}" class="nav-link active">{{toddler.name}}</a></li>
+                                        {% else %}
+                                            <li><a href="/category/{{toddler.cid}}" class="nav-link">{{toddler.name}}</a></li>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li><a href="/category/{{child.cid}}" class="nav-link">{{child.name}}<span class="badge badge-secondary">42</span></a>
+                                <ul class="list-unstyled">
+                                {% for toddler in toddler_categories %}
+                                   {% if toddler.parent_cid == child.cid %}
+                                        {% if toddler.cid == category.cid %}
+                                            <li><a href="/category/{{toddler.cid}}" class="nav-link active">{{toddler.name}}</a></li>
+                                        {% else %}
+                                            <li><a href="/category/{{toddler.cid}}" class="nav-link">{{toddler.name}}</a></li>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                                </ul>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
+            </div>
+            <div class="card sidebar-menu mb-4">
+            <div class="card-header">
+                <h3 class="h4 card-title">Brands <a href="#" class="btn btn-sm btn-danger pull-right"><i class="fa fa-times-circle"></i> Clear</a></h3>
+            </div>
+            <div class="card-body">
+                <form>
+                <div class="form-group">
+                    <div class="checkbox">
+                    <label>
+                        <input type="checkbox"> Armani  (10)
+                    </label>
+                    </div>
+                    <div class="checkbox">
+                    <label>
+                        <input type="checkbox"> Versace  (12)
+                    </label>
+                    </div>
+                    <div class="checkbox">
+                    <label>
+                        <input type="checkbox"> Carlo Bruni  (15)
+                    </label>
+                    </div>
+                    <div class="checkbox">
+                    <label>
+                        <input type="checkbox"> Jack Honey  (14)
+                    </label>
+                    </div>
+                </div>
+                <button class="btn btn-default btn-sm btn-primary"><i class="fa fa-pencil"></i> Apply</button>
+                </form>
+            </div>
+            </div>
+        </div>
+        <div class="col-lg-9">
+            {% block content2 %}
+            {% endblock %}
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

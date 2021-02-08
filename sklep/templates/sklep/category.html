@@ -1,0 +1,46 @@
+{% extends 'sklep/products.html' %}
+{% block content2 %}
+{% load static %}
+    <div class="box info-bar">
+    <h1>{{category.name}}</h1>
+    <div class="row">
+        <div class="col-md-12 col-lg-4 products-showing">Showing <strong>12</strong> of <strong>25</strong> products</div>
+        <div class="col-md-12 col-lg-7 products-number-sort">
+        <form class="form-inline d-block d-lg-flex justify-content-between flex-column flex-md-row">
+            <div class="products-number"><strong>Show</strong><a href="#" class="btn btn-sm btn-primary">12</a><a href="#" class="btn btn-outline-secondary btn-sm">24</a><a href="#" class="btn btn-outline-secondary btn-sm">All</a><span>products</span></div>
+            <div class="products-sort-by mt-2 mt-lg-0"><strong>Sort by</strong>
+            <select name="sort-by" class="form-control">
+                <option>Price</option>
+                <option>Name</option>
+                <option>Sales first</option>
+            </select>
+            </div>
+        </form>
+        </div>
+    </div>
+    </div>
+    <div class="row products">
+    {% if category_products %}
+        {% for product in category_products %}
+            <div class="col-lg-4 col-md-6">
+                <div class="product">
+                    <div class="flip-container">
+                        <div class="flipper">
+                            <div class="front"><a href="/details/{{ product.pid }}/"><img src="{% static product.img_dir_list.0 %}" alt="" class="img-fluid"></a></div>
+                            <div class="back"><a href="/details/{{ product.pid }}/"><img src="{% static product.img_dir_list.1 %}" alt="" class="img-fluid"></a></div>
+                        </div>
+                        </div><a href="/details/{{ product.pid }}/" class="invisible"><img src="{% static product.img_dir_list.0 %}" alt="" class="img-fluid"></a>
+                        <div class="text">
+                        <h3><a href="/details/{{ product.pid }}/">{{ product.name }}</a></h3>
+                        <p class="price"> 
+                            <del></del>${{ product.price_gross }}
+                        </p>
+                        <p class="buttons"><a href="detail.html" class="btn btn-outline-secondary">View detail</a><a href="basket.html" class="btn btn-primary"><i class="fa fa-shopping-cart"></i>Add to cart</a></p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <!-- /.products-->
+    </div>
+{% endblock %}

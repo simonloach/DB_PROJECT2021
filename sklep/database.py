@@ -147,15 +147,15 @@ def getToddlerCategories():
 class DummyProduct():
 
     def __init__(self, record):
-        self.pid = record.pid,
-        self.name = record.name,
-        self.description = record.description,
-        self.image_source = record.image_source,
-        self.manufacturers_categorie_id = record.manufacturers_categorie_id,
-        self.price_gross = record.price_gross,
-        self.vat_tax = record.vat_tax,
-        self.no_instock = record.no_instock,
-        self.on_sale = record.on_sale,
+        self.pid = record.pid
+        self.name = record.name
+        self.description = record.description
+        self.image_source = record.image_source
+        self.manufacturers_categorie_id = record.manufacturers_categorie_id
+        self.price_gross = record.price_gross
+        self.vat_tax = record.vat_tax
+        self.no_instock = record.no_instock
+        self.on_sale = record.on_sale
         self.sale_price_gross = record.sale_price_gross
     
     

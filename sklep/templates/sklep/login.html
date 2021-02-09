@@ -1,0 +1,47 @@
+{% extends 'sklep/base.html' %}
+{% block content %}
+{% load static %}
+<div id="content">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li aria-current="page" class="breadcrumb-item active">Log In</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-3">
+      </div>
+      <div class="col-lg-6">
+        <div class="box">
+          <h1>Login</h1>
+          <p class="lead">Already our customer?</p>
+          {% if request.session.login_status == False %}
+            <p class="text-muted"> {{ request.session.login_message }}</p>
+          {% endif %}
+          <hr>
+          <form method="post">
+            {% csrf_token %}
+            {% for field in loginForm %}
+                <div class="form-group">
+                    <label for="name">{{ field.label_tag }}</label>
+                    {{ field}}
+                    {% for error in field.errors %}
+                        <p style="color: red">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {%endfor%}
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary"><i class="fa fa-user-md"></i> Log in</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

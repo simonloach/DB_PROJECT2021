@@ -38,8 +38,13 @@
             </div>
             <div class="col-lg-6 text-center text-lg-right">
               <ul class="menu list-inline mb-0">
-                <li class="list-inline-item"><a href="#" data-toggle="modal" data-target="#login-modal">Login</a></li>
+              {% if request.session.logged_in %}
+                <li class="list-inline-item"><a href="#">ClientID: {{ request.session.client_id }}</a></li>
+                <li class="list-inline-item"><a href="/basket">Basket</a></li>
+              {% else %}
+                <li class="list-inline-item"><a href="/login">Login</a></li>
                 <li class="list-inline-item"><a href="/register">Register</a></li>
+              {% endif %}
               </ul>
             </div>
           </div>
@@ -73,7 +78,7 @@
       <!-- *** TOP BAR END ***-->
       <nav class="navbar navbar-expand-lg">
         <div class="container">
-          <a href="" class="navbar-brand home">
+          <a href="/" class="navbar-brand home">
             <img src="{% static 'img/logo.png'%}" alt="logo" class="d-none d-md-inline-block">
             <img src="{% static 'img/logo-small.png'%}" alt="logo" class="d-inline-block d-md-none">
             <span class="sr-only">Go to homepage</span>
@@ -151,7 +156,7 @@
             <p class="text-center text-lg-left">©2021 Szymon Piskorz, Jarek Żelechowski, Konrad Springer</p>
           </div>
           <div class="col-lg-6">
-            <p class="text-center text-lg-right">Template design by <a href="https://bootstrapious.com/">Bootstrapious</a>
+            <p class="text-center text-lg-right">Template design by DJ Khalid</a>
               <!-- If you want to remove this backlink, pls purchase an Attribution-free License @ https://bootstrapious.com/p/obaju-e-commerce-template. Big thanks!-->
             </p>
           </div>

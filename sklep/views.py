@@ -2,26 +2,38 @@
 from sklep import database
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
-from sklep.models import Product, Categorie, ManufacturersCategorie, Client
+from sklep.models import Product, Categorie, ManufacturersCategorie, Client, Cart
 from .forms import RegisterForm
 from .forms import LoginForm
 
 
 def index(request):
+    sql = database.getBestSelling(100, 100)
+    temp = []
 
-    top_products = database.getBestSelling(1000, 25)
-    parent_categories = Categorie.objects.all().filter(parent_cid = None)
+    for product in sql:
+        temp.append(database.DummyProduct(product))
+
+    top_products = temp  # Product.objects.all()
+    parent_categories = Categorie.objects.all().filter(parent_cid=None)
     child_categories = database.getFirst2LevelsOfCat()
     toddler_categories = database.getToddlerCategories()
-    context = {'top_products': top_products, 'parent_categories': parent_categories,
-		'child_categories': child_categories, 'toddler_categories': toddler_categories}    
+    context = {'top_products': top_products,
+               'parent_categories': parent_categories,
+               'child_categories': child_categories,
+               'toddler_categories': toddler_categories,
+               }
+
+    if request.session.get('logged_in'):
+        context['user_session'] = request.session['client_id']
+
     return render(request, 'sklep/index.html', context)
+
 
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-
 
             name = form.cleaned_data['name']
             surname = form.cleaned_data['surname']
@@ -32,50 +44,54 @@ def register(request):
             zip_code = form.cleaned_data['zip_code']
             address = form.cleaned_data['address']
             phone = form.cleaned_data['phone']
+            apart_no = form.cleaned_data['apart_no']
 
-            num_results = Client.objects.filter(email = email).count()
+            if not apart_no:
+                apart_no = 1
+            num_results = Client.objects.filter(email=email).count()
             if num_results == 0:
                 Client.objects.create(
-                sha_pass = password,
-                email = email,
-                name=name,
-                surname = surname,
-                country = country,
-                city = city,
-                zip_code = zip_code,
-                street = address,
-                phone = phone,
+                    sha_pass=password,
+                    email=email,
+                    name=name,
+                    surname=surname,
+                    country=country,
+                    city=city,
+                    zip_code=zip_code,
+                    street=address,
+                    phone=phone,
+                    apart_no=apart_no,
                 )
-
 
             return redirect('/thanks/')
 
     registerForm = RegisterForm()
     loginForm = LoginForm()
-    context = {'registerForm': registerForm, 'loginForm':loginForm}
+    context = {'registerForm': registerForm, 'loginForm': loginForm}
     return render(request, 'sklep/register.html', context)
 
 
 def base(request):
     return render(request, 'sklep/base.html')
-    
+
 
 def product(request, product_id):
     try:
         product = Product.objects.get(pid=product_id)
     except Product.DoesNotExist:
         raise Http404("Product does not exist")
-    return render(request, 'sklep/product.html', {'product': product, 'product_id':product_id})
+    return render(request, 'sklep/product.html', {'product': product, 'product_id': product_id})
+
 
 def category(request, cat_id):
     try:
         category = Categorie.objects.get(cid=cat_id)
         parent_categories_tree = []
-        parent_categories = Categorie.objects.all().filter(parent_cid = None)
+        parent_categories = Categorie.objects.all().filter(parent_cid=None)
         child_categories = database.getFirst2LevelsOfCat()
         toddler_categories = database.getToddlerCategories()
         parent = category
-        category_products = Product.objects.all()
+        category_products = Product.objects.all()  # TODO JAREK CATEGORIA ZAPYTANIE ZRÓP
         if category.parent_cid:
             parent_categories_tree.append(Categorie.objects.get(cid=category.parent_cid))
             while parent_categories_tree[0].parent_cid:
@@ -84,15 +100,19 @@ def category(request, cat_id):
     except Categorie.DoesNotExist:
         raise Http404("Category does not exist")
     return render(request, 'sklep/category.html', {'category': category, 'parent_categories': parent_categories,
-		'child_categories': child_categories, 'toddler_categories': toddler_categories, 'category_products':category_products,
-        'cat_id':cat_id, 'parent_categories_tree':parent_categories_tree, 'parent':parent })
+                                                   'child_categories': child_categories,
+                                                   'toddler_categories': toddler_categories,
+                                                   'category_products': category_products,
+                                                   'cat_id': cat_id, 'parent_categories_tree': parent_categories_tree,
+                                                   'parent': parent})
+
 
 def detail(request, prod_id):
     try:
         product = Product.objects.get(pid=prod_id)
         category = ManufacturersCategorie.objects.get(manufacturers_categorie_id=product.manufacturers_categorie_id).cid
         parent_categories_tree = []
-        parent_categories = Categorie.objects.all().filter(parent_cid = None)
+        parent_categories = Categorie.objects.all().filter(parent_cid=None)
         child_categories = database.getFirst2LevelsOfCat()
         toddler_categories = database.getToddlerCategories()
         parent = category
@@ -105,18 +125,115 @@ def detail(request, prod_id):
     except Categorie.DoesNotExist:
         raise Http404("Category does not exist")
     return render(request, 'sklep/detail.html', {'category': category, 'parent_categories': parent_categories,
-		'child_categories': child_categories, 'toddler_categories': toddler_categories, 'category_products':category_products,
-        'product':product, 'parent_categories_tree':parent_categories_tree, 'parent':parent })
+                                                 'child_categories': child_categories,
+                                                 'toddler_categories': toddler_categories,
+                                                 'category_products': category_products,
+                                                 'product': product, 'parent_categories_tree': parent_categories_tree,
+                                                 'parent': parent})
+
 
 def search(request):
     try:
         phrase = request.GET.get('phrase', '')
         products = database.getSearchByName(phrase)
-        parent_categories = Categorie.objects.all().filter(parent_cid = None)
+        parent_categories = Categorie.objects.all().filter(parent_cid=None)
         child_categories = database.getFirst2LevelsOfCat()
         toddler_categories = database.getToddlerCategories()
     except Categorie.DoesNotExist:
         raise Http404("Category does not exist")
     return render(request, 'sklep/search.html', {'parent_categories': parent_categories,
-		'child_categories': child_categories, 'toddler_categories': toddler_categories,
-        'phrase':phrase, 'products':products})
+                                                 'child_categories': child_categories,
+                                                 'toddler_categories': toddler_categories,
+                                                 'phrase': phrase, 'products': products})
+
+
+def thanks(request):
+    return render(request, 'sklep/thanks.html')
+
+
+def login(request):
+    loginForm = LoginForm(request.POST)
+    context = {'loginForm': loginForm}
+
+    if request.method == "POST":
+        if loginForm.is_valid():
+            try:
+                account = Client.objects.get(email=request.POST['email'])
+                if (account.sha_pass == request.POST['password']):
+                    request.session['client_id'] = account.client_id
+                    request.session['logged_in'] = True
+                    request.session.set_expiry(300)
+                    return redirect('/')
+                else:
+                    request.session['login_status'] = False
+                    request.session['login_message'] = 'Wrong credentials! 3'
+            except Client.DoesNotExist:
+                request.session['login_status'] = False
+                request.session['login_message'] = 'Wrong credentials! 2'
+        else:
+            request.session['login_status'] = False
+            request.session['login_message'] = 'Wrong credentials! 1'
+    return render(request, 'sklep/login.html', context)
+
+
+def basket(request):
+    if request.method == 'POST':
+
+        if request.POST['client_id'] != '/':
+
+            cli_id = int(request.POST['client_id'])
+            prod_id = int(request.POST['product_id'])
+            cli_obj = Client.objects.get(client_id=cli_id)
+            try:
+
+                user_cart = Cart.objects.all().filter(client_id=cli_id, pid=Product.objects.get(pid=prod_id))
+                if user_cart:
+                    for cart in user_cart:
+                        cart.quantity += 1
+                        cart.save()
+                else:
+                    new_cart = Cart(client=cli_obj, pid=Product.objects.get(pid=prod_id), quantity=1)
+                    new_cart.save()
+
+            except Cart.DoesNotExist:
+                new_cart = Cart(client=cli_obj, pid=prod_id, quantity=1)
+
+            user_carts = Cart.objects.filter(client=cli_id)
+            final, no_products, total = prepare_data(user_carts)
+
+            context = {'data': final, 'no_products': no_products, 'total':total}
+            return render(request, 'sklep/basket.html', context)
+        else:
+            return HttpResponse("nie jestes zalogowany zią")
+    if request.method == 'GET':
+        if request.session['client_id'] != '/':
+            user_carts = Cart.objects.filter(client=request.session['client_id'])
+            final, no_products, total = prepare_data(user_carts)
+
+            context = {'data': final, 'no_products': no_products, 'total': total}
+            return render(request, 'sklep/basket.html', context)
+
+
+def handle_session(request, context):
+    if request.session.get('logged_in'):
+        context['user_session'] = request.session['client_id']
+    return context
+
+
+def prepare_data(user_carts):
+    final = []
+    no_products = 0
+    total = 0
+    for cart in user_carts:
+        temp_dict = {}
+        prod = Product.objects.get(pid=cart.pid.pid)
+        temp_dict['image_source'] = prod.image_source
+        temp_dict['name'] = prod.name
+        temp_dict['quantity'] = cart.quantity
+        temp_dict['price_gross'] = prod.price_gross
+        temp_dict['total'] = cart.quantity * prod.price_gross
+        total += temp_dict['total']
+        no_products += cart.quantity
+        final.append(temp_dict)
+
+    return final, no_products, total

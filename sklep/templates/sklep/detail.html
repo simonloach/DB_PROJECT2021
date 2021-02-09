@@ -10,12 +10,18 @@
         </div>
     </div>
     <div class="col-md-6">
+        <form action="/basket/" method="POST">
+	{% csrf_token %}
         <div class="box">
         <h1 class="text-center">{{ product.name }}</h1>
         <p class="goToDescription"><a href="#details" class="scroll-to">Scroll to product details, material &amp; care and sizing</a></p>
         <p class="price">{{ product.price_gross }}</p>
-        <p class="text-center buttons"><a href="basket.html" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> Add to cart</a><a href="basket.html" class="btn btn-outline-primary"><i class="fa fa-heart"></i> Add to wishlist</a></p>
+        <input type="hidden" name="product_id" value={{product.pid}} />
+        <input type="hidden" name="client_id" value={{ request.session.client_id }} />
+
+        <p type="submit" class="text-center buttons"><button type="submit" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> Add to cart</button><a href="basket.html" class="btn btn-outline-primary"><i class="fa fa-heart"></i> Add to wishlist</a></p>
         </div>
+        </form>
         <div data-slider-id="1" class="owl-thumbs">
         {% for img in product.img_dir_list %}
         <button class="owl-thumb-item"><img src="{% static img %}" alt="" class="img-fluid"></button>
@@ -27,30 +33,6 @@
     <p></p>
     <h4>Product details</h4>
     <p>{{ product.description }}</p>
-    </div>
-    <div class="row same-height-row">
-    <div class="col-md-3 col-sm-6">
-        <div class="box same-height">
-        <h3>You may also like these products</h3>
-        </div>
-    </div>
-    {% if category_products %}
-        {% for product in category_products %}
-            <div class="col-md-3 col-sm-6">
-                <div class="product same-height">
-                    <div class="flip-container">
-                        <div class="flipper">
-                            <div class="front"><a href="/details/{{ product.pid }}/"><img src="{% static product.img_dir_list.0 %}" alt="" class="img-fluid"></a></div>
-                            <div class="back"><a href="/details/{{ product.pid }}/"><img src="{% static product.img_dir_list.1 %}" alt="" class="img-fluid"></a></div>
-                        </div>
-                        </div><a href="/details/{{ product.pid }}/" class="invisible"><img src="{% static product.img_dir_list.0 %}" alt="" class="img-fluid"></a>
-                        <div class="text">
-                        <h3><a href="/details/{{ product.pid }}/">{{ product.name }}</a></h3>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-    {% endif %}
     </div>
 </div>
 {% endblock %}

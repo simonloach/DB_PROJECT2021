@@ -38,8 +38,8 @@ class RegisterForm(forms.Form):
     address = forms.CharField(label='Address', max_length=100)
     address.widget.attrs.update({'class': 'form-control'})
 
-    apart_no = forms.IntegerField(label='Apt No.', validators=[MinValueValidator(0), MaxValueValidator(1000)], required=False)
-    phone.widget.attrs.update({'class': 'form-control'})
+    apart_no = forms.IntegerField(label='Apt No.', validators=[MinValueValidator(1), MaxValueValidator(1000)], required=False)
+    apart_no.widget.attrs.update({'class': 'form-control'})
 
     
 
@@ -52,8 +52,12 @@ class RegisterForm(forms.Form):
             raise forms.ValidationError(
                 "Password and confirm password does not match"
             )
-    
+
+ 
 class LoginForm(forms.Form):
-    email = forms.CharField(max_length=100)
-    password = forms.CharField(max_length=100)
+    email = forms.EmailField(label='Email', max_length=100)
+    email.widget.attrs.update({'class': 'form-control'})
+
+    password = forms.CharField(label='Password', max_length=100, widget=forms.PasswordInput())
+    password.widget.attrs.update({'class': 'form-control'})
     

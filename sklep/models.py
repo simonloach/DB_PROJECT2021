@@ -53,6 +53,14 @@ class AuthUser(models.Model):
         managed = False
         db_table = 'auth_user'
 
+class Manufacturer(models.Model):
+    manufacturer_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        managed = False
+        db_table = 'manufacturer'
+
 
 class AuthUserGroups(models.Model):
     user = models.ForeignKey(AuthUser, models.DO_NOTHING)
@@ -73,17 +81,36 @@ class AuthUserUserPermissions(models.Model):
         db_table = 'auth_user_user_permissions'
         unique_together = (('user', 'permission'),)
 
-
-class Cart(models.Model):
-    cart_id = models.AutoField(primary_key=True)
-    client = models.ForeignKey('Client', models.DO_NOTHING, blank=True, null=True)
-    pid = models.ForeignKey('Product', models.DO_NOTHING, db_column='pid', blank=True, null=True)
-    quantity = models.IntegerField()
+class Client(models.Model):
+    client_id = models.AutoField(primary_key=True)
+    sha_pass = models.CharField(db_column='SHA_pass', max_length=100)  # Field name made lowercase.
+    name = models.CharField(max_length=100)
+    surname = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    country = models.CharField(max_length=100, blank=True, null=True)
+    zip_code = models.CharField(max_length=10)
+    street = models.CharField(max_length=100)
+    apart_no = models.IntegerField()
+    phone = models.IntegerField()
+    email = models.CharField(max_length=100)
 
     class Meta:
         managed = False
-        db_table = 'cart'
+        db_table = 'client'
 
+class Order(models.Model):
+    oid = models.AutoField(primary_key=True)
+    client = models.ForeignKey(Client, models.DO_NOTHING)
+    order_placed_date = models.DateTimeField()
+    order_taken_date = models.DateTimeField(blank=True, null=True)
+    shipping_date = models.DateTimeField(blank=True, null=True)
+    order_fulfilment_date = models.DateTimeField(blank=True, null=True)
+    order_taken = models.BooleanField(blank=True, null=True)
+    order_fulfilled = models.BooleanField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'order'
 
 class Categorie(models.Model):
     cid = models.AutoField(primary_key=True)
@@ -94,28 +121,67 @@ class Categorie(models.Model):
         managed = False
         db_table = 'categorie'
 
-    def __str__(self):
-        return self.name
 
-
-class Client(models.Model):
-    client_id = models.AutoField(primary_key=True)
-    login = models.CharField(max_length=100)
-    sha_pass = models.CharField(db_column='SHA_pass', max_length=100)  # Field name made lowercase.
-    name = models.CharField(max_length=100)
-    surname = models.CharField(max_length=100)
-    city = models.CharField(max_length=100)
-    region = models.CharField(max_length=100, blank=True, null=True)
-    zip_code = models.CharField(max_length=10)
-    street = models.CharField(max_length=100)
-    building_no = models.IntegerField()
-    apart_no = models.IntegerField(blank=True, null=True)
-    phone = models.IntegerField()
-    email = models.CharField(max_length=100)
+class ManufacturersCategorie(models.Model):
+    manufacturers_categorie_id = models.AutoField(primary_key=True)
+    manufacturer = models.ForeignKey(Manufacturer, models.DO_NOTHING, blank=True, null=True)
+    cid = models.ForeignKey(Categorie, models.DO_NOTHING, db_column='cid', blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'client'
+        db_table = 'manufacturers_categorie'
+
+class Product(models.Model):
+    pid = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+    image_source = models.CharField(max_length=100, blank=True, null=True)
+    manufacturers_categorie = models.ForeignKey(ManufacturersCategorie, models.DO_NOTHING, blank=True, null=True)
+    price_gross = models.DecimalField(max_digits=50, decimal_places=2)
+    vat_tax = models.DecimalField(max_digits=50, decimal_places=2, blank=True, null=True)
+    no_instock = models.IntegerField(blank=True, null=True)
+    on_sale = models.BooleanField(blank=True, null=True)
+    sale_price_gross = models.DecimalField(max_digits=50, decimal_places=2, blank=True, null=True)
+
+    def img_dir_list(self):
+        img_list = []
+        for img in self.img_as_list():
+            img_list.append("db_temp_img/"+str(self.pid)+"/"+img)
+        if len(img_list) == 1: img_list.append(img_list[0])
+        return img_list
+
+    def img_as_list(self):
+        if self.image_source:
+            return self.image_source.split(',')
+        else: return ['img/no-image-found.png']
+
+    class Meta:
+        managed = False
+        db_table = 'product'
+
+class Cart(models.Model):
+    cart_id = models.AutoField(primary_key=True)
+    client = models.ForeignKey(Client, models.DO_NOTHING, blank=True, null=True)
+    pid = models.ForeignKey(Product, models.DO_NOTHING, db_column='pid', blank=True, null=True)
+    quantity = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'cart'
+
+
+class OrderedProduct(models.Model):
+    ordered_product_id = models.AutoField(primary_key=True)
+    oid = models.ForeignKey(Order, models.DO_NOTHING, db_column='oid', blank=True, null=True)
+    pid = models.ForeignKey(Product, models.DO_NOTHING, db_column='pid', blank=True, null=True)
+    product_quantity = models.IntegerField()
+    product_price = models.DecimalField(max_digits=50, decimal_places=2)
+
+    class Meta:
+        managed = False
+        db_table = 'ordered_product'
+
+
 
 
 class DjangoAdminLog(models.Model):
@@ -162,76 +228,10 @@ class DjangoSession(models.Model):
         db_table = 'django_session'
 
 
-class Manufacturer(models.Model):
-    manufacturer_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
-
-    class Meta:
-        managed = False
-        db_table = 'manufacturer'
 
 
-class ManufacturersCategorie(models.Model):
-    manufacturers_categorie_id = models.AutoField(primary_key=True)
-    manufacturer = models.ForeignKey(Manufacturer, models.DO_NOTHING, blank=True, null=True)
-    cid = models.ForeignKey(Categorie, models.DO_NOTHING, db_column='cid', blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'manufacturers_categorie'
 
 
-class Order(models.Model):
-    oid = models.AutoField(primary_key=True)
-    client = models.ForeignKey(Client, models.DO_NOTHING)
-    order_placed_date = models.DateTimeField()
-    order_taken_date = models.DateTimeField(blank=True, null=True)
-    shipping_date = models.DateTimeField(blank=True, null=True)
-    order_fulfilment_date = models.DateTimeField(blank=True, null=True)
-    order_taken = models.BooleanField(blank=True, null=True)
-    order_fulfilled = models.BooleanField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'order'
 
 
-class OrderedProduct(models.Model):
-    ordered_product_id = models.AutoField(primary_key=True)
-    oid = models.ForeignKey(Order, models.DO_NOTHING, db_column='oid', blank=True, null=True)
-    pid = models.ForeignKey('Product', models.DO_NOTHING, db_column='pid', blank=True, null=True)
-    product_quantity = models.IntegerField()
-    product_price = models.DecimalField(max_digits=50, decimal_places=2)
 
-    class Meta:
-        managed = False
-        db_table = 'ordered_product'
-
-
-class Product(models.Model):
-    pid = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
-    description = models.TextField(blank=True, null=True)
-    image_source = models.CharField(max_length=100, blank=True, null=True)
-    manufacturers_categorie = models.ForeignKey(ManufacturersCategorie, models.DO_NOTHING, blank=True, null=True)
-    price_gross = models.DecimalField(max_digits=50, decimal_places=2)
-    vat_tax = models.DecimalField(max_digits=50, decimal_places=2, blank=True, null=True)
-    no_instock = models.IntegerField(blank=True, null=True)
-    on_sale = models.BooleanField(blank=True, null=True)
-    sale_price_gross = models.DecimalField(max_digits=50, decimal_places=2, blank=True, null=True)
-
-    def img_as_list(self):
-        if self.image_source:
-            return self.image_source.split(',')
-        else: return ['img/no-image-found.png']
-
-    def img_dir_list(self):
-        img_list = []
-        for img in self.img_as_list():
-            img_list.append("db_temp_img/"+str(self.pid)+"/"+img)
-        if len(img_list) == 1: img_list.append(img_list[0])
-        return img_list
-
-    class Meta:
-        managed = False
-        db_table = 'product'

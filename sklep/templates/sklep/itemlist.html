@@ -6,9 +6,10 @@
                     <div class="flip-container">
                         <div class="flipper">
                             <div class="front"><a href="/details/{{ product.pid }}/"><img src="{% static product.img_dir_list.0 %}" alt="" class="img-fluid"></a></div>
-                            <div class="back"><a href="/details/{{ product.pid }}/"><img src="{% static product.img_dir_list.1 %}" alt="" class="img-fluid"></a></div>
+                            <div class="back"><a href="/details/{{ product.pid }}/"><img src="{% static product.img_dir_list.1 %}" alt="" class="img-fluid" ></a></div>
                         </div>
-                        </div><a href="/details/{{ product.pid }}/" class="invisible"><img src="{% static product.img_dir_list.0 %}" alt="" class="img-fluid"></a>
+                      </div>
+                        <a href="/details/{{ product.pid }}/" class="invisible"><img src="/static/db_temp_img/3/1.jpg" alt="" class="img-fluid"></a>
                         <div class="text">
                         <h3><a href="/details/{{ product.pid }}/">{{ product.name }}</a></h3>
                         <p class="price"> 

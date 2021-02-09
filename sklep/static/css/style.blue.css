@@ -772,6 +772,30 @@ h1 {
   left: 0;
 }
 
+#content .row.products .col-lg-4.col-md-6 .product .front .img-fluid, #content .row.products .col-lg-4.col-md-6 .product .back .img-fluid{
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.row.same-height-row .col-lg-4.col-md-6 .product .front .img-fluid, #content .row.products .col-lg-4.col-md-6 .product .back .img-fluid{
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+#hot .product-slider.owl-carousel.owl-theme.owl-loaded.owl-drag .item .product .flipper .img-fluid{
+  height: 200px;
+  object-fit:cover;
+}
+
+#productMain .owl-stage-outer .item .img-fluid{
+  height: 350px;
+  object-fit:cover;
+}
+
+
+
 #content .product .front {
   z-index: 2;
   -webkit-transform: rotateY(0deg);

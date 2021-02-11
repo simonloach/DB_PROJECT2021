@@ -15,7 +15,8 @@
             </div>
             <div id="basket" class="col-lg-9">
               <div class="box">
-                <form method="post" action="checkout1.html">
+                <form method="post" action="/update/">
+                    {% csrf_token %}
                   <h1>Shopping cart</h1>
                   <p class="text-muted">Obecnie masz {{no_products}} produktów w koszyku</p>
                   <div class="table-responsive">
@@ -31,18 +32,18 @@
                       </thead>
                       <tbody>
                       {% for item in data %}
-                          {{item.image_source }}
-				
+
                            <tr>
-                          <td><a href="#"><img src="{% static item.image_source.img_ddsadir_list.0 %}" alt={{item.name }}></a></td>
+                          <td><a href="#"><img src="{% static item.image_source.0 %}" alt={{item.name }}></a></td>
                           <td><a href="#">{{ item.name }}</a></td>
                           <td>
-                            <input type="number" value={{ item.quantity }} class="form-control">
+                            <input type="number"name="quantity" id="quantity" value={{ item.quantity }} class="form-control">
+                             <input type="hidden" id="pid" name="pid" value={{ item.pid }}>
                           </td>
                           <td>${{ item.price_gross }}</td>
                           <td>$0.00</td>
-                          <td>${{ item.total}}</td>
-                          <td><a href="#"><i class="fa fa-trash-o"></i></a></td>
+                          <td>${{item.total}}</td>
+                          <td><a href="delete/{{ item.pid }}"><i class="fa fa-trash-o"></i></a></td>
                         </tr>
                       {% endfor %}
 
@@ -50,17 +51,22 @@
                       <tfoot>
                         <tr>
                           <th colspan="5">Total</th>
-                          <th colspan="2">${{total}}</th>
+                          <th colspan="2">${{total_price}}</th>
                         </tr>
                       </tfoot>
                     </table>
                   </div>
                   <!-- /.table-responsive-->
                   <div class="box-footer d-flex justify-content-between flex-column flex-lg-row">
-                    <div class="left"><a href="category.html" class="btn btn-outline-secondary"><i class="fa fa-chevron-left"></i> Continue shopping</a></div>
+                    <div class="left"><a href="/" class="btn btn-outline-secondary"><i class="fa fa-chevron-left"></i> Continue shopping</a></div>
                     <div class="right">
-                      <button class="btn btn-outline-secondary"><i class="fa fa-refresh"></i> Update cart</button>
-                      <button type="submit" class="btn btn-primary">Proceed to checkout <i class="fa fa-chevron-right"></i></button>
+                      <button type="submit" class="btn btn-outline-secondary"><i class="fa fa-refresh"></i> Update cart</button>
+                        </form>
+                    <div>
+                      <form method="get" action="/checkout">
+                        <button type="submit" class="btn btn-primary">Proceed to checkout <i class="fa fa-chevron-right"></i></button>
+                      </form>
+                    </div>
                     </div>
                   </div>
                 </form>
@@ -78,7 +84,7 @@
                     <tbody>
                       <tr>
                         <td>Order subtotal</td>
-                        <th>${{total}}</th>
+                        <th>${{total_price}}</th>
                       </tr>
                       <tr>
                         <td>Shipping and handling</td>
@@ -90,7 +96,7 @@
                       </tr>
                       <tr class="total">
                         <td>Total</td>
-                        <th>${{total}}</th>
+                        <th>${{total_price}}</th>
                       </tr>
                     </tbody>
                   </table>

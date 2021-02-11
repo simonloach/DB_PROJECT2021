@@ -3,26 +3,13 @@
 {% load static %}
     <div class="box info-bar">
     <h1>{{category.name}}</h1>
-    <div class="row">
-        <div class="col-md-12 col-lg-4 products-showing">Showing <strong>12</strong> of <strong>25</strong> products</div>
-        <div class="col-md-12 col-lg-7 products-number-sort">
-        <form class="form-inline d-block d-lg-flex justify-content-between flex-column flex-md-row">
-            <div class="products-number"><strong>Show</strong><a href="#" class="btn btn-sm btn-primary">12</a><a href="#" class="btn btn-outline-secondary btn-sm">24</a><a href="#" class="btn btn-outline-secondary btn-sm">All</a><span>products</span></div>
-            <div class="products-sort-by mt-2 mt-lg-0"><strong>Sort by</strong>
-            <select name="sort-by" class="form-control">
-                <option>Price</option>
-                <option>Name</option>
-                <option>Sales first</option>
-            </select>
-            </div>
-        </form>
-        </div>
     </div>
-    </div>
-    <div class="row products">
     {% if category_products %}
+    <div class="row products">
         {% for product in category_products %}
             <div class="col-lg-4 col-md-6">
+                <form action="/basket/" method="POST">
+                    {% csrf_token %}
                 <div class="product">
                     <div class="flip-container">
                         <div class="flipper">
@@ -35,11 +22,16 @@
                         <p class="price"> 
                             <del></del>${{ product.price_gross }}
                         </p>
-                        <p class="buttons"><a href="detail.html" class="btn btn-outline-secondary">View detail</a><a href="basket.html" class="btn btn-primary"><i class="fa fa-shopping-cart"></i>Add to cart</a></p>
+                            <input type="hidden" name="product_id" value={{product.pid}} />
+                            <input type="hidden" name="client_id" value={{ request.session.client_id }} />
+        <p type="submit" class="text-center buttons"><button type="submit" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> Add to cart</button><a href="basket.html" class="btn btn-outline-primary"><i class="fa fa-heart"></i> Add to wishlist</a></p>
                     </div>
                 </div>
             </div>
         {% endfor %}
+    {% else %}
+    <div class="box">
+        <h2> Out of stock </h2>
     {% endif %}
     <!-- /.products-->
     </div>

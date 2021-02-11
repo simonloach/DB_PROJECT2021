@@ -785,7 +785,7 @@ h1 {
 }
 
 #hot .product-slider.owl-carousel.owl-theme.owl-loaded.owl-drag .item .product .flipper .img-fluid{
-  height: 200px;
+  height: 150px;
   object-fit:cover;
 }
 
@@ -1012,6 +1012,16 @@ h1 {
   text-align: right;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
 #content #checkout .table tbody tr td img, #content #basket .table tbody tr td img, #content #customer-order .table tbody tr td img {
   width: 50px;
 }
